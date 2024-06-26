@@ -1,6 +1,6 @@
 # DELTA_TASK
 ### PowerUPs 
-  Hitting colored square boxes will give you an extra chance to hit the obstacle
+  Hitting colored square boxes will give you an extra chance to hit an obstacle without causing any extra harm to jerry
 ### Traps
   Hitting traps will bring tom closer to jerry
 ### Cheese
