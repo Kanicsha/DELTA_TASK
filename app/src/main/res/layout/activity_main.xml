@@ -13,7 +13,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+  <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Overlapping Text"
+        android:textSize="24sp"
+        android:background="@drawable/score"
 
+        android:textColor="@color/white"
+        android:layout_gravity="top|right"
+        android:layout_marginTop="50dp"
+        />
+
+    <ImageView
+        android:layout_width="55dp"
+        android:layout_height="57dp"
+        android:src="@drawable/cheese"
+        android:layout_marginStart="30dp"
+        android:layout_marginVertical="40dp"/>
+
+    <TextView
+        android:id="@+id/cheese"
+        android:layout_width="49dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/score"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/disappearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="Overlapping Text"
+        android:textColor="#E91E63"
+        android:fontFamily="@font/allerta_stencil"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
 
 </FrameLayout>

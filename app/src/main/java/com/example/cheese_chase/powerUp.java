@@ -1,15 +1,20 @@
 package com.example.cheese_chase;
 
+
+
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class powerUp  {
     private Bitmap bm_powerUp;
     float x_center,y_center;
     int size_x, size_y;
     int current_track;
+    int speed;
 
     public powerUp(Bitmap bm,float x,float y,int size) {
         this.bm_powerUp=bm;
@@ -32,6 +37,7 @@ public class powerUp  {
     }
     public void increase_speed(float speed){ //make it move upwards if speed is positive n down when neg
         y_center-=speed;
+        this.speed= (int) speed;
     }
 
     public Bitmap getBm_powerUp() {
