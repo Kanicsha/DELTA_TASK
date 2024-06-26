@@ -33,7 +33,8 @@ public class canvas_view extends View {
     Paint paint, paint_outline;
     private MediaPlayer mediaPlayer;
     Random random = new Random();
-    float speed=-1;
+    float speed=-0.5f;
+    float speed1=-0.5f;
     boolean jerryCollided=false;
     int max_powe=2;
     int cheeseCollected =0;
@@ -43,6 +44,7 @@ MainActivity ma;
     jerry j;
     public tom t;
     int number_obstacles = 10;
+
     int obstacle_hit_jerry=0;
     private Runnable gameRunnable;
     ArrayList<obstacle> obstacles1 = new ArrayList<>();
@@ -57,14 +59,11 @@ MainActivity ma;
     //int[] track_width = {180,540,900};
     boolean first_touch_jerry=true;
     boolean gameover=false;
-    int previous_cheese=0;
-    int track_end,track_start;
+
 
     int[] jerry_tom_center={180,540,900};
-    private Timer timer;
+
     HashSet<obstacle> hashSet=new HashSet<>();
-    HashSet<obstacle> hashSetC=new HashSet<>();
-    HashSet<obstacle> hashSetT=new HashSet<>();
 
     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.powerup);
     private int score=0;
@@ -114,7 +113,7 @@ MainActivity ma;
         for (int i = 0; i < number_obstacles; i++) {
             int track_no = random.nextInt(3);//value between 0 and 2
             //  Log.i("arrays",left[i]+"  "+top[i]);
-            float top = (float) (Math.random() * (1400 - 400 + 1) + 400);
+            float top = (float) (Math.random() * (2000 - 1800 + 1) + 1800);
             // Log.i("random tiop", String.valueOf(top));
 
             obstacle obstacle = new obstacle(90, track_width[track_no], top);
@@ -143,14 +142,44 @@ MainActivity ma;
             //  if (obstacle_new.current_track==obstacles1.get(i-1).current_track) {
             //   float newTop = obstacles1.get(i - 1).bottom + obstacles1.get(i - 1).gap_down;
             for (int j = i - 1; j >= 0; j--) {
-                if (current_obstacle.current_track == obstacles1.get(j).current_track) {
+               // if (current_obstacle.current_track == obstacles1.get(j).current_track) {
                     float newTop = obstacles1.get(j).bottom + obstacles1.get(j).gap_down;
-                    // Log.i("gap|bottom", obstacles1.get(j).gap_down +"  "+ obstacles1.get(j).bottom);
                     float newTop1 = Math.max(newTop, current_obstacle.top);
                     current_obstacle.setTop(newTop);
                     //current_obstacle.gap_down+= current_obstacle.bottom;
-                    break;
+                   // break;
+               // }
+            }
+float minimum=  0;
+//            for (int j = 0; j < obstacles1.size(); j++) {
+//                if (i != j && obstacles1.get(j).top<=minimum) {
+//                    minimum=obstacles1.get(j).top;
+//                    //break;
+//                }
+//            }
+//            if (obstacle.bottom >= 2200) {
+//                //  Log.i("end","obstacle croseed!!");
+//                obstacle.setTop(minimum-200);
+//                int track_no = random.nextInt(3);//value between 0 and 2
+//                obstacle.current_track=track_no;
+//                obstacle.setLeft(track_width[track_no]);
+//
+//            }
+            for (i = 0; i < obstacles1.size(); i++) {
+                obstacle obstacle = obstacles1.get(i);
+                for (int j = 0; j < obstacles1.size(); j++) {
+                    if (i != j && obstacles1.get(j).top<=minimum) {
+                        minimum=obstacles1.get(j).top;
+                    }
                 }
+
+                    //  Log.i("end","obstacle croseed!!");
+                    obstacle.setTop(Math.min(minimum-500,obstacle.top));
+                    int track_no = random.nextInt(3);//value between 0 and 2
+                    obstacle.current_track=track_no;
+                    obstacle.setLeft(track_width[track_no]);
+
+
             }
             // obstacle_new.setTop(newTop);
             //obstacle_new.gap_down = obstacle_new.top + obstacle_new.size;
@@ -195,18 +224,16 @@ MainActivity ma;
         for (int i = 0; i < obstacles1.size(); i++) {
             obstacle obstacle = obstacles1.get(i);
             obstacle.increase_speed(speed);
-            if (speed > -12) {
-                speed -= 0.001f;
-            }
             for (int j = 0; j < obstacles1.size(); j++) {
                 if (i != j && obstacles1.get(j).top<=minimum) {
                     minimum=obstacles1.get(j).top;
-                    break;
+                    //break;
                 }
             }
+            float newTop= (float) (Math.random()*(300-50)+50);
             if (obstacle.bottom >= 2200) {
                 //  Log.i("end","obstacle croseed!!");
-                obstacle.setTop(minimum-500);
+                obstacle.setTop(Math.min(minimum-400,newTop));
                 int track_no = random.nextInt(3);//value between 0 and 2
                 obstacle.current_track=track_no;
                 obstacle.setLeft(track_width[track_no]);
@@ -219,7 +246,7 @@ MainActivity ma;
     private void createBitmap(Canvas canvas) {
         for (powerUp powerUp : powerUps) {
                 powerUp.create_powerUP(canvas);
-                powerUp.increase_speed(speed);
+             //   powerUp.increase_speed(speed1);
                 if(powerUp.y_center==2100){
                     powerUp.y_center= (float) (Math.random()*(-10000-200)+200);
                 }
@@ -356,7 +383,8 @@ boolean stop=false;
             public void run() {
                // Log.i("rin","running");
               if(obstacle_hit_jerry<max_powe)
-              {updateObstacles();
+              {
+                  updateObstacles();
                 updateScore();
                 updatePowerUps();
                 for(obstacle obstacle:obstacles1){
@@ -375,6 +403,9 @@ boolean stop=false;
                 }
 
                 checkLosses();
+                  if (speed > -9) {
+                      speed -= 0.0005f;
+                  }
                   ma.onTextChange("SCORE:"+updateScore()/30);
                 invalidate();
                 handler1.postDelayed(this, 0);
@@ -456,7 +487,7 @@ boolean stop=false;
 
     private void updatePowerUps() {
         for(powerUp powerUp:powerUps){
-            //powerUp.increase_speed(-1);
+            powerUp.increase_speed(speed);
             if(powerUp.y_center>=2200){
                 powerUp.y_center=(float) (Math.random()*(-5000+100)+100);
             }
@@ -464,7 +495,6 @@ boolean stop=false;
         JerryPU(j,powerUps);
         for(cheese cheese:cheeses) {
             cheese.increase_speed(speed);
-
             if (cheese.y_center >= 2200) {
                 cheese.y_center = (float) (Math.random()*(-5000+100)+100);
             }
@@ -477,7 +507,9 @@ boolean stop=false;
             }
         }
         JerryTrap(j,traps);
-
+//        if(speed1>-9) speed1-=0.005f;
+//        Log.i("speed1", String.valueOf(speed1));
+//        Log.i("eee", String.valueOf(speed));
     }
               /* final Handler handler = new Handler();
                 final Runnable runnable = new Runnable() {
@@ -741,7 +773,7 @@ boolean stop=false;
         score_deducted = false;
         first_touch_jerry = true;
         gameover = false;
-        speed = -1;
+        speed = -0.5f;
         max_powe=2;
         obstacles1.clear();
         cheeseCollected=0;
